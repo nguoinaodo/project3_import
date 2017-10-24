@@ -4,7 +4,7 @@
 	include 'import/import_author_paper.php';
 	// DB name
 	$raw_db = 'project3_raw';
-	$main_db = 'project';
+	$main_db = 'project3';
 	// Import authors
 	// import_authors($raw_db, 0, 70000, $main_db);
 	// Import papers
