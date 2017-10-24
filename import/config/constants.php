@@ -1,0 +1,4 @@
+<?php
+	$UNKNOWN = 'UNKNOWN';
+	$MAX_INT = '18446744073709551615';
+?> 
