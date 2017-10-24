@@ -82,7 +82,7 @@
 			// Insert if not exists
 			$sql = "INSERT INTO countries (name) VALUES ('$country')";
 			mysqli_query($conn, $sql);
-			$country_id = mysql_insert_id($conn);
+			$country_id = mysqli_insert_id($conn);
 		}
 		mysqli_free_result($r);
 		return $country_id;
@@ -104,7 +104,7 @@
 			// Insert if not exists
 			$sql = "INSERT INTO cities (name, country_id) VALUES ('$city', '$country_id')";
 			mysqli_query($conn, $sql);
-			$city_id = mysql_insert_id($conn); 
+			$city_id = mysqli_insert_id($conn); 
 		}
 		mysqli_free_result($r);
 		return $city_id;
@@ -126,7 +126,7 @@
 			// Insert if not exists
 			$sql = "INSERT INTO universities (name, city_id) VALUES ('$university', '$city_id')";
 			mysqli_query($conn, $sql);
-			$university_id = mysql_insert_id($conn); 
+			$university_id = mysqli_insert_id($conn); 
 		}
 		mysqli_free_result($r);
 		return $university_id;
@@ -148,7 +148,7 @@
 				// Insert if not exists
 				$sql = "INSERT INTO subjects (name) VALUES ('$subject')";
 				mysqli_query($conn, $sql);
-				$subject_id = mysql_insert_id($conn);
+				$subject_id = mysqli_insert_id($conn);
 			}
 			mysqli_free_result($r);
 			// Insert author-subject

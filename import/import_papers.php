@@ -61,7 +61,7 @@
 				// If not exists, insert
 				$sql = "INSERT INTO keywords (content) VALUES ('$keyword')";
 				mysqli_query($conn, $sql);
-				$keyword_id = mysql_insert_id($conn);
+				$keyword_id = mysqli_insert_id($conn);
 			}
 			// Free result
 			mysqli_free_result($r); 	
