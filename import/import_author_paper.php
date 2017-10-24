@@ -14,7 +14,7 @@
 		$conn = connect($raw_db) or die(mysqli_error());
 		
 		// Read author-paper
-		$sql = "SELECT * FROM `author_paper` LIMIT $offset, $limit";
+		$sql = "SELECT * FROM `author_paper` LIMIT $offset, $MAX_INT";
 		$result = mysqli_query($conn, $sql);
 		mysqli_close($conn);
 		// Insert links
