@@ -43,7 +43,7 @@ CREATE TABLE `authors` (
 
 CREATE TABLE `author_paper` (
   `author_id` varchar(12) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `paper_id` varchar(25) COLLATE utf8mb4_unicode_ci NOT NULL
+  `paper_id` varchar(25) COLLATE ascii_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -118,7 +118,7 @@ CREATE TABLE `co_authors` (
 
 CREATE TABLE `co_author_paper` (
   `co_author_id` int(10) UNSIGNED NOT NULL,
-  `paper_id` varchar(25) COLLATE utf8mb4_unicode_ci NOT NULL
+  `paper_id` varchar(25) COLLATE ascii_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -140,7 +140,7 @@ CREATE TABLE `keywords` (
 
 CREATE TABLE `keyword_paper` (
   `keyword_id` int(10) UNSIGNED NOT NULL,
-  `paper_id` varchar(25) COLLATE utf8mb4_unicode_ci NOT NULL
+  `paper_id` varchar(25) COLLATE ascii_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -185,7 +185,7 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 --
 
 CREATE TABLE `papers` (
-  `id` varchar(25) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` varchar(25) COLLATE ascii_general_ci NOT NULL,
   `title` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `cover_date` datetime DEFAULT NULL,
   `abstract` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -473,24 +473,3 @@ ALTER TABLE `universities`
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-
--- 16/10/2017
-ALTER TABLE `author_subject`
-  ADD PRIMARY KEY (author_id, subject_id);
-ALTER TABLE `co_author_paper`
-  ADD PRIMARY KEY (co_author_id, paper_id);
-ALTER TABLE `keyword_paper`
-  ADD PRIMARY KEY (keyword_id, paper_id);    
-
-ALTER TABLE `keywords` 
-  MODIFY `content` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL;
--- 24/10/2017
-ALTER TABLE `papers`
-  MODIFY `id` varchar(45) COLLATE ascii_general_ci NOT NULL;
-ALTER TABLE `keyword_paper` 
-  MODIFY `paper_id` varchar(45) COLLATE ascii_general_ci NOT NULL;
-ALTER TABLE `author_paper`
-  MODIFY `paper_id` varchar(45) COLLATE ascii_general_ci NOT NULL;
-ALTER TABLE `co_author_paper`
-  MODIFY `paper_id` varchar(45) COLLATE ascii_general_ci NOT NULL;
-  
