@@ -41,7 +41,7 @@
 ?>
 <?php 
 	// Check paper exists
-	function check_paper_exists($paper_id) {
+	function check_paper_exists($conn, $paper_id) {
 		$sql = "SELECT * FROM papers WHERE id='$paper_id'";
 		$r = mysqli_query($conn, $sql) or die(mysqli_error());
 		$row = mysqli_fetch_assoc($r);
@@ -50,7 +50,7 @@
 	}
 
 	// Check author exists
-	function check_author_exitst($author_id) {
+	function check_author_exitst($conn, $author_id) {
 		$sql = "SELECT * FROM authors WHERE id='$author_id'";
 		$r = mysqli_query($conn, $sql);
 		$row = mysqli_fetch_assoc($r);
@@ -59,7 +59,7 @@
 	}
 
 	// Insert link
-	function insert_link($author_id, $paper_id) {
+	function insert_link($conn, $author_id, $paper_id) {
 		$sql = "INSERT INTO author_paper (author_id, paper_id) VALUES ('$author_id', '$paper_id')";
 		mysqli_query($conn, $sql);
 	}
