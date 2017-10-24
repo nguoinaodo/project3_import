@@ -18,9 +18,9 @@
 		$sql = "SELECT * FROM author LIMIT $offset, $MAX_INT";
 		// $sql = "SELECT * FROM author OFFSET $offset";
 		$result = mysqli_query($conn, $sql) or die(mysqli_connect_error());
-		mysqli_close($conn)
+		mysqli_close($conn);
 		// Import
-		$conn = connect($main_db)
+		$conn = connect($main_db);
 		while ($row_author = mysqli_fetch_assoc($result)) {
 			// Affiliation
 			$affiliation = preg_split('/,\s*/', $row_author['affiliation'], -1, PREG_SPLIT_NO_EMPTY);

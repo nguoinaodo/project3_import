@@ -17,9 +17,9 @@
 		$sql = "SELECT * FROM paper LIMIT $offset, $MAX_INT";
 		// $sql = "SELECT * FROM paper OFFSET $offset";
 		$result = mysqli_query($conn, $sql) or die(mysqli_error());
-		mysqli_close($conn)
+		mysqli_close($conn);
 		// Handle papers
-		$conn = connect($main_db)
+		$conn = connect($main_db);
 		while ($row_paper = mysqli_fetch_assoc($result)) {
 			// Paper info
 			$id = $row_paper['id'];
