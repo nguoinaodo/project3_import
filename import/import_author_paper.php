@@ -11,57 +11,56 @@
 		include 'config/constants.php';
 		include_once 'config/mysql.php';
 		// Database connection
-		$conn = connect();
+		$conn = connect($raw_db);
 		
 		// Read author-paper
-		use_db($conn, $raw_db);
 		$sql = "SELECT * FROM `author_paper` LIMIT $offset, $limit";
-		$result = mysql_query($sql);
-
+		$result = mysqli_query($conn, $sql);
+		mysqli_close($conn)
 		// Insert links
-		use_db($conn, $main_db);
-		while ($row_link = mysql_fetch_assoc($result)) {
+		$conn = connect($main_db)
+		while ($row_link = mysqli_fetch_assoc($result)) {
 			$paper_id = $row_link['paperid'];
 			$author_id = $row_link['authorid'];
 			// Check author exists
-			if (!check_paper_exists($paper_id)) {
+			if (!check_paper_exists($conn, $paper_id)) {
 				continue;
 			}
 			// Check paper exists
-			if (!check_author_exitst($author_id)) {
+			if (!check_author_exitst($conn, $author_id)) {
 				continue;
 			}
 			// Insert link
-			insert_link($author_id, $paper_id);
+			insert_link($conn, $author_id, $paper_id);
 		}
 
 		// Close
-		mysql_free_result($result);
-		mysql_close($conn);
+		mysqli_free_result($result);
+		mysqli_close($conn);
 	}
 ?>
 <?php 
 	// Check paper exists
 	function check_paper_exists($paper_id) {
 		$sql = "SELECT * FROM papers WHERE id='$paper_id'";
-		$r = mysql_query($sql) or die(mysql_error());
-		$row = mysql_fetch_assoc($r);
-		mysql_free_result($r);
+		$r = mysqli_query($conn, $sql) or die(mysqli_error());
+		$row = mysqli_fetch_assoc($r);
+		mysqli_free_result($r);
 		return $row ? true : false;
 	}
 
 	// Check author exists
 	function check_author_exitst($author_id) {
 		$sql = "SELECT * FROM authors WHERE id='$author_id'";
-		$r = mysql_query($sql);
-		$row = mysql_fetch_assoc($r);
-		mysql_free_result($r);
+		$r = mysqli_query($conn, $sql);
+		$row = mysqli_fetch_assoc($r);
+		mysqli_free_result($r);
 		return $row ? true : false;
 	}
 
 	// Insert link
 	function insert_link($author_id, $paper_id) {
 		$sql = "INSERT INTO author_paper (author_id, paper_id) VALUES ('$author_id', '$paper_id')";
-		mysql_query($sql);
+		mysqli_query($conn, $sql);
 	}
 ?>
