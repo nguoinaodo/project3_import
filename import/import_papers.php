@@ -19,7 +19,7 @@
 		$result = mysqli_query($conn, $sql) or die(mysqli_error());
 		mysqli_close($conn);
 		// Handle papers
-		$conn = connect($main_db);
+		$conn = connect($main_db) or die(mysqli_error());
 		while ($row_paper = mysqli_fetch_assoc($result)) {
 			// Paper info
 			$id = $row_paper['id'];

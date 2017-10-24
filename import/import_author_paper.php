@@ -11,14 +11,14 @@
 		include 'config/constants.php';
 		include_once 'config/mysql.php';
 		// Database connection
-		$conn = connect($raw_db);
+		$conn = connect($raw_db) or die(mysqli_error());
 		
 		// Read author-paper
 		$sql = "SELECT * FROM `author_paper` LIMIT $offset, $limit";
 		$result = mysqli_query($conn, $sql);
-		// mysqli_close($conn);
+		mysqli_close($conn);
 		// Insert links
-		$conn = connect($main_db);
+		$conn = connect($main_db) or die(mysqli_error());
 		while ($row_link = mysqli_fetch_assoc($result)) {
 			$paper_id = $row_link['paperid'];
 			$author_id = $row_link['authorid'];
