@@ -25,8 +25,8 @@
 			$id = $row_paper['id'];
 			$title = $row_paper['title'];
 			$cover_date = $row_paper['coverDate'];
-			$abstract = mysqli_real_escape_string($row_paper['abstract']);
-			$url = mysqli_real_escape_string($row_paper['url']);
+			$abstract = mysqli_real_escape_string($conn, $row_paper['abstract']);
+			$url = mysqli_real_escape_string($conn, $row_paper['url']);
 			$issn = $row_paper['issn'];
 			$keywords = preg_split('/,\s*/', trim($row_paper['keywords']), -1, PREG_SPLIT_NO_EMPTY);
 			// Insert papers
@@ -61,7 +61,7 @@
 				// If not exists, insert
 				$sql = "INSERT INTO keywords (content) VALUES ('$keyword')";
 				mysqli_query($conn, $sql);
-				$keyword_id = mysqli_insert_id();
+				$keyword_id = mysql_insert_id($conn);
 			}
 			// Free result
 			mysqli_free_result($r); 	

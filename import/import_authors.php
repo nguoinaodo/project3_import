@@ -44,8 +44,8 @@
 			$id = $row_author['id'];
 			$surname = $row_author['surname'];
 			$given_name = $row_author['givenName'];
-			$email = mysqli_real_escape_string($row_author['email']);
-			$url = mysqli_real_escape_string($row_author['url']);
+			$email = mysqli_real_escape_string($conn, $row_author['email']);
+			$url = mysqli_real_escape_string($conn, $row_author['url']);
 			insert_authors($conn, $id, $surname, $given_name, $email, $url, $university_id);
 			
 			// Insert subjects and links
@@ -82,7 +82,7 @@
 			// Insert if not exists
 			$sql = "INSERT INTO countries (name) VALUES ('$country')";
 			mysqli_query($conn, $sql);
-			$country_id = mysqli_insert_id();
+			$country_id = mysql_insert_id($conn);
 		}
 		mysqli_free_result($r);
 		return $country_id;
@@ -103,8 +103,8 @@
 		} else {
 			// Insert if not exists
 			$sql = "INSERT INTO cities (name, country_id) VALUES ('$city', '$country_id')";
-			mysqli_query($sql);
-			$city_id = mysqli_insert_id(); 
+			mysqli_query($conn, $sql);
+			$city_id = mysql_insert_id($conn); 
 		}
 		mysqli_free_result($r);
 		return $city_id;
@@ -126,7 +126,7 @@
 			// Insert if not exists
 			$sql = "INSERT INTO universities (name, city_id) VALUES ('$university', '$city_id')";
 			mysqli_query($conn, $sql);
-			$university_id = mysqli_insert_id(); 
+			$university_id = mysql_insert_id($conn); 
 		}
 		mysqli_free_result($r);
 		return $university_id;
@@ -148,7 +148,7 @@
 				// Insert if not exists
 				$sql = "INSERT INTO subjects (name) VALUES ('$subject')";
 				mysqli_query($conn, $sql);
-				$subject_id = mysqli_insert_id();
+				$subject_id = mysql_insert_id($conn);
 			}
 			mysqli_free_result($r);
 			// Insert author-subject
