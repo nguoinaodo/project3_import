@@ -167,7 +167,7 @@
 			$university = $UNKNOWN;
 		}
 		// Check exists
-		$sql = "SELECT * FROM universities WHERE name='$university' AND city_id='$city_id'";
+		$sql = "SELECT * FROM universities WHERE name='$university' AND city_id=$city_id";
 		$r = $conn -> query($sql);
 		if ($r) {
 			$row = $r -> fetch_assoc();
@@ -175,7 +175,7 @@
 				$university_id = $row['id'];
 			} else {
 				// Insert if not exists
-				$sql = "INSERT INTO universities (name, city_id) VALUES ('$university', '$city_id')";
+				$sql = "INSERT INTO universities (name, city_id) VALUES ('$university', $city_id)";
 				if ($conn -> query($sql)) {
 					$university_id = $conn -> insert_id;
 				} else {
