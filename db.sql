@@ -27,7 +27,7 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `authors` (
-  `id` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` int(14) UNSIGNED NOT NULL,
   `given_name` varchar(45) COLLATE utf8mb4_unicode_ci NOT NULL,
   `surname` varchar(45) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -42,7 +42,7 @@ CREATE TABLE `authors` (
 --
 
 CREATE TABLE `author_paper` (
-  `author_id` varchar(12) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `author_id` int(14) UNSIGNED NOT NULL,
   `paper_id` varchar(25) COLLATE ascii_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -53,7 +53,7 @@ CREATE TABLE `author_paper` (
 --
 
 CREATE TABLE `author_subject` (
-  `author_id` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `author_id` int(14) UNSIGNED NOT NULL,
   `subject_id` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -106,8 +106,8 @@ CREATE TABLE `countries` (
 
 CREATE TABLE `co_authors` (
   `id` int(10) UNSIGNED NOT NULL,
-  `first_author_id` varchar(12) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `second_author_id` varchar(12) COLLATE utf8mb4_unicode_ci NOT NULL
+  `first_author_id` int(14) UNSIGNED NOT NULL,
+  `second_author_id` int(14) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
