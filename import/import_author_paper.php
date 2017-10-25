@@ -11,15 +11,13 @@
 		include 'config/constants.php';
 		include_once 'config/mysql.php';
 		// Database connection
-		$conn = connect($raw_db) or die(mysqli_error());
-		
+		$conn = connect($raw_db);
 		// Read author-paper
 		$sql = "SELECT * FROM `author_paper` LIMIT $offset, $MAX_INT";
-		$result = mysqli_query($conn, $sql);
-		mysqli_close($conn);
+		$result = $conn -> query($sql);
 		// Insert links
-		$conn = connect($main_db) or die(mysqli_error());
-		while ($row_link = mysqli_fetch_assoc($result)) {
+		$conn -> select_db($main_db)
+		while ($row_link = $result -> fetch_assoc()) {
 			$paper_id = $row_link['paperid'];
 			$author_id = $row_link['authorid'];
 			// Check author exists
@@ -35,32 +33,32 @@
 		}
 
 		// Close
-		mysqli_free_result($result);
-		mysqli_close($conn);
+		$result -> free();
+		$conn -> close();
 	}
 ?>
 <?php 
 	// Check paper exists
 	function check_paper_exists($conn, $paper_id) {
 		$sql = "SELECT * FROM papers WHERE id='$paper_id'";
-		$r = mysqli_query($conn, $sql) or die(mysqli_error());
-		$row = mysqli_fetch_assoc($r);
-		mysqli_free_result($r);
+		$r = $conn -> query($sql) or return false;
+		$row = $r -> fetch_assoc();
+		$r -> free();
 		return $row ? true : false;
 	}
 
 	// Check author exists
 	function check_author_exitst($conn, $author_id) {
 		$sql = "SELECT * FROM authors WHERE id='$author_id'";
-		$r = mysqli_query($conn, $sql);
-		$row = mysqli_fetch_assoc($r);
-		mysqli_free_result($r);
+		$r = $conn -> query($sql) or return false;
+		$row = $r -> fetch_assoc();
+		$r -> free();
 		return $row ? true : false;
 	}
 
 	// Insert link
 	function insert_link($conn, $author_id, $paper_id) {
 		$sql = "INSERT INTO author_paper (author_id, paper_id) VALUES ('$author_id', '$paper_id')";
-		mysqli_query($conn, $sql);
+		$conn -> query($sql) or print(mysqli_error());
 	}
 ?>

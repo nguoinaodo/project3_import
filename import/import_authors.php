@@ -13,15 +13,12 @@
 
 		// Connect to raw database 
 		$conn = connect($raw_db);
-
 		// Read authors
 		$sql = "SELECT * FROM author LIMIT $offset, $MAX_INT";
-		// $sql = "SELECT * FROM author OFFSET $offset";
-		$result = mysqli_query($conn, $sql) or die(mysqli_error());
-		mysqli_close($conn);
+		$result = $conn -> query($sql) or die(mysqli_error());
 		// Import
-		$conn = connect($main_db);
-		while ($row_author = mysqli_fetch_assoc($result)) {
+		$conn -> select_db($main_db);
+		while ($row_author = $result -> fetch_assoc()) {
 			// Affiliation
 			$affiliation = preg_split('/,\s*/', $row_author['affiliation'], -1, PREG_SPLIT_NO_EMPTY);
 			$n = count($affiliation);
@@ -35,17 +32,25 @@
 			$abbreviation = join(', ', $abbreviation);
 			// Country
 			$country_id = handle_country($conn, $country, $UNKNOWN);
+			if (!$country_id) {
+				continue;
+			}
 			// City
 			$city_id = handle_city($conn, $city, $country_id, $UNKNOWN);
+			if (!$city_id) {
+				continue;
+			}
 			// University
 			$university_id = handle_university($conn, $university, $city_id, $UNKNOWN);
-
+			if (!$university_id) {
+				continue;
+			}
 			// Insert author
 			$id = $row_author['id'];
 			$surname = $row_author['surname'];
 			$given_name = $row_author['givenName'];
-			$email = mysqli_real_escape_string($conn, $row_author['email']);
-			$url = mysqli_real_escape_string($conn, $row_author['url']);
+			$email = $conn -> real_escape_string($row_author['email']);
+			$url = $conn -> real_escape_string($row_author['url']);
 			insert_authors($conn, $id, $surname, $given_name, $email, $url, $university_id);
 			
 			// Insert subjects and links
@@ -54,16 +59,18 @@
 		}
 
 		// Free results
-		mysqli_free_result($result);
+		$result -> free();
 		// Close connection
-		mysqli_close($conn);
+		$conn -> close();
 	}
 ?>
 <?php
 	// Insert authors
 	function insert_authors($conn, $id, $surname, $given_name, $email, $url, $university_id) {
 			$sql = "INSERT INTO authors (id, given_name, surname, email, url, university_id) VALUES ('$id', '$surname', '$given_name', '$email', '$url', '$university_id')";
-			mysqli_query($conn, $sql);
+			if ($conn -> query($sql)) {
+				printf("Error %s\n", $conn -> sqlstate);
+			};
 	}
 
 	// Country 
@@ -74,18 +81,39 @@
 		}
 		// Check exists
 		$sql = "SELECT * FROM countries WHERE name='$country'";
-		$r = mysqli_query($conn, $sql) or die(mysqli_error());
-		$row = mysqli_fetch_assoc($r);
-		if ($row) {
-			$country_id = $row['id'];
+		$r = $conn -> query($sql);
+		if ($r) {
+			$row = $r -> fetch_assoc();
+			if ($row) {
+				$country_id = $row['id'];
+			} else {
+				// Insert if not exists
+				$sql = "INSERT INTO countries (name) VALUES ('$country')";
+				if ($conn -> query($sql)) {
+					$country_id = $conn -> insert_id();
+				} else {
+					$country_id = null;
+				}
+			}
+			$r -> free();
+			return $country_id;
 		} else {
-			// Insert if not exists
-			$sql = "INSERT INTO countries (name) VALUES ('$country')";
-			mysqli_query($conn, $sql);
-			$country_id = mysqli_insert_id($conn);
+			printf("Error: %s\n", $conn -> sqlstate);
+			$r = $conn -> query("SELECT * FROM countries WHERE name='$UNKNOWN'");
+			if ($r) {
+				$row = $r -> fetch_assoc();
+				$r -> free();
+				if ($row) {
+					$country_id = $row['id'];
+				} else {
+					$country_id = null;
+				}
+			} else {
+				printf("Error: %s\n", $conn -> sqlstate);
+				$country_id = null;
+			}
+			return $country_id;
 		}
-		mysqli_free_result($r);
-		return $country_id;
 	}
 
 	// City
@@ -96,18 +124,40 @@
 		}
 		// Check exists
 		$sql = "SELECT * FROM cities WHERE name='$city' AND country_id='$country_id'";
-		$r = mysqli_query($conn, $sql);
-		$row = mysqli_fetch_assoc($r);
-		if ($row) {
-			$city_id = $row['id'];
+		$r = $conn -> query($sql);
+		if ($r) {
+			$row = $r -> fetch_assoc();
+			if ($row) {
+				$city_id = $row['id'];
+			} else {
+				// Insert if not exists
+				$sql = "INSERT INTO cities (name, country_id) VALUES ('$city', '$country_id')";
+				if ($conn -> query($sql)) {
+					$city_id = $conn -> insert_id(); 
+				} else {
+					printf("Error: %s\n", $conn -> sqlstate);
+					$city_id = null;
+				}
+			}
+			$r -> free();
+			return $city_id;
 		} else {
-			// Insert if not exists
-			$sql = "INSERT INTO cities (name, country_id) VALUES ('$city', '$country_id')";
-			mysqli_query($conn, $sql);
-			$city_id = mysqli_insert_id($conn); 
+			printf("Error: %s\n", $conn -> sqlstate);
+			$r = $conn -> query("SELECT * FROM cities WHERE name='$UNKNOWN'");
+			if ($r) {
+				$row = $r -> fetch_assoc();
+				if ($row) {
+					$city_id = $row['id'];
+				} else {
+					$city_id = null;
+				}
+				$r -> free();
+			} else {
+				printf("Error: %s\n", $conn -> sqlstate);
+				$city_id = null;
+			}
+			return $city_id;
 		}
-		mysqli_free_result($r);
-		return $city_id;
 	}
 
 	// University
@@ -118,18 +168,41 @@
 		}
 		// Check exists
 		$sql = "SELECT * FROM universities WHERE name='$university' AND city_id='$city_id'";
-		$r = mysqli_query($conn, $sql);
-		$row = mysqli_fetch_assoc($r);
-		if ($row) {
-			$university_id = $row['id'];
+		$r = $conn -> query($sql);
+		if ($r) {
+			$row = $r -> fetch_assoc();
+			if ($row) {
+				$university_id = $row['id'];
+			} else {
+				// Insert if not exists
+				$sql = "INSERT INTO universities (name, city_id) VALUES ('$university', '$city_id')";
+				if ($conn -> query($sql)) {
+					$university_id = $conn -> insert_id();
+				} else {
+					printf("Error: %s\n", $conn -> sqlstate);
+					$university_id = null;
+				}
+			}
+			$r -> free();
+			return $university_id;
 		} else {
-			// Insert if not exists
-			$sql = "INSERT INTO universities (name, city_id) VALUES ('$university', '$city_id')";
-			mysqli_query($conn, $sql);
-			$university_id = mysqli_insert_id($conn); 
+			printf("Error: %s\n", $conn -> sqlstate);
+			$r = $conn -> query("SELECT * FROM universities WHERE name='$UNKNOWN'");
+			if ($r) {
+				$row = $r -> fetch_assoc();
+				if (!$row) {
+					$university_id = null;
+				} else {
+					$university_id = $row['id'];
+				}
+				$r -> free();
+			} else {
+				printf("Error: %s\n", $conn -> sqlstate);
+				$university_id = null;
+			}
+			return $university_id;
 		}
-		mysqli_free_result($r);
-		return $university_id;
+		
 	}
 
 	function handle_subjects($conn, $author_id, $subjects) {
@@ -140,20 +213,29 @@
 			}
 			// Check subject exists
 			$sql = "SELECT * FROM subjects WHERE name='$subject'";
-			$r = mysqli_query($conn, $sql);
-			$row = mysqli_fetch_assoc($r);
+			$r = $conn -> query($sql);
+			if (!$r) {
+				printf("Error: %s\n", $conn -> sqlstate);
+				continue;
+			}
+			$row = $r -> fetch_assoc();
 			if ($row) {
 				$subject_id = $row['id'];
 			} else {
 				// Insert if not exists
 				$sql = "INSERT INTO subjects (name) VALUES ('$subject')";
-				mysqli_query($conn, $sql);
-				$subject_id = mysqli_insert_id($conn);
+				if ($conn -> query($sql)) {
+					$subject_id = $conn -> insert_id();
+				} else {
+					printf("Error: %s\n", $conn -> sqlstate);
+					continue;
+				}
 			}
-			mysqli_free_result($r);
+			$r -> free();
 			// Insert author-subject
 			$sql = "INSERT INTO author_subject (author_id, subject_id) VALUES ('$author_id', '$subject_id')";
-			mysqli_query($conn, $sql);
+			$conn -> query($sql) or 
+				printf("Error: %s\n", $conn -> sqlstate);
 		}
 	}
 ?>

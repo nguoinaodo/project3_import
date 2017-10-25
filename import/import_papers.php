@@ -12,21 +12,18 @@
 		include_once 'config/mysql.php';
 		// Database connection
 		$conn = connect($raw_db);
-		
 		// Read raw database
 		$sql = "SELECT * FROM paper LIMIT $offset, $MAX_INT";
-		// $sql = "SELECT * FROM paper OFFSET $offset";
-		$result = mysqli_query($conn, $sql) or die(mysqli_error());
-		mysqli_close($conn);
+		$result = $conn -> query($sql) or die(mysqli_error());
 		// Handle papers
-		$conn = connect($main_db) or die(mysqli_error());
-		while ($row_paper = mysqli_fetch_assoc($result)) {
+		$conn -> select_db($main_db);
+		while ($row_paper = $result -> fetch_assoc()) {
 			// Paper info
 			$id = $row_paper['id'];
 			$title = $row_paper['title'];
 			$cover_date = $row_paper['coverDate'];
-			$abstract = mysqli_real_escape_string($conn, $row_paper['abstract']);
-			$url = mysqli_real_escape_string($conn, $row_paper['url']);
+			$abstract = $conn -> real_escape_string($row_paper['abstract']);
+			$url = $conn -> real_escape_string($row_paper['url']);
 			$issn = $row_paper['issn'];
 			$keywords = preg_split('/,\s*/', trim($row_paper['keywords']), -1, PREG_SPLIT_NO_EMPTY);
 			// Insert papers
@@ -36,15 +33,16 @@
 		}
 		
 		// Free and close connection
-		mysqli_free_result($result);
-		mysqli_close($conn);
+		$result -> free();
+		$conn -> close();
 	}
 ?> 
 <?php
 	// Insert papers
 	function insert_papers($conn, $id, $title, $cover_date, $abstract, $url, $issn) {
 			$sql = "INSERT INTO papers (id, title, cover_date, abstract, url, issn) VALUES ('$id', '$title', '$cover_date', '$abstract', '$url', '$issn')";
-			mysqli_query($conn, $sql);
+			$conn -> query($sql) or
+				printf("Error: %s\n", $conn -> sqlstate);
 	}
 
 	// Insert keywords, links 
@@ -52,22 +50,31 @@
 		foreach ($keywords as $key => $keyword) {
 			// Check exists
 			$sql = 'SELECT * FROM keywords WHERE content="$keyword"';
-			$r = mysqli_query($conn, $sql) or die(mysqli_error());
-			$row = mysqli_fetch_assoc($r);
+			$r = mysqli_query($conn, $sql);
+			if (!$r) {
+				printf("Error: %s\n", $conn -> sqlstate);
+				continue;
+			} 
+			$row = $r -> fetch_assoc();
 			if ($row) {
 				// If exists
 				$keyword_id = $row['id'];
 			} else {
 				// If not exists, insert
 				$sql = "INSERT INTO keywords (content) VALUES ('$keyword')";
-				mysqli_query($conn, $sql);
-				$keyword_id = mysqli_insert_id($conn);
+				if ($conn -> query($sql)) {
+					$keyword_id = $conn -> insert_id();
+				} else {
+					printf("Error: %s\n", $conn -> sqlstate);
+					continue;
+				}
 			}
 			// Free result
-			mysqli_free_result($r); 	
+			$r -> free(); 	
 			// Insert links paper-keyword
 			$sql = "INSERT INTO keyword_paper (keyword_id, paper_id) VALUES ('$keyword_id', '$paper_id')";
-			mysqli_query($conn, $sql);
+			$conn -> query($sql) or 
+				printf("Error: %s\n", $conn -> sqlstate);
 		}	
 	}
 ?>
