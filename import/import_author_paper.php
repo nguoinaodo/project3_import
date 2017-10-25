@@ -13,7 +13,7 @@
 		// Database connection
 		$conn = connect($raw_db);
 		// Read author-paper
-		$sql = "SELECT * FROM `author_paper` LIMIT $offset, $MAX_INT";
+		$sql = 'SELECT * FROM author_paper LIMIT $offset, $MAX_INT';
 		$result = $conn -> query($sql);
 		// Insert links
 		$conn -> select_db($main_db);
@@ -40,7 +40,7 @@
 <?php 
 	// Check paper exists
 	function check_paper_exists($conn, $paper_id) {
-		$sql = "SELECT * FROM papers WHERE id='$paper_id'";
+		$sql = 'SELECT * FROM papers WHERE id="$paper_id"';
 		$r = $conn -> query($sql);
 		if (!$r) {
 			printf("Error: %s\n", mysqli_error($conn));
@@ -53,7 +53,7 @@
 
 	// Check author exists
 	function check_author_exitst($conn, $author_id) {
-		$sql = "SELECT * FROM authors WHERE id='$author_id'";
+		$sql = 'SELECT * FROM authors WHERE id="$author_id"';
 		$r = $conn -> query($sql);
 		if (!$r) {
 			printf("Error: %s\n", mysqli_error($conn));
@@ -66,7 +66,7 @@
 
 	// Insert link
 	function insert_link($conn, $author_id, $paper_id) {
-		$sql = "INSERT INTO author_paper (author_id, paper_id) VALUES ('$author_id', '$paper_id')";
+		$sql = 'INSERT INTO author_paper (author_id, paper_id) VALUES ("$author_id", "$paper_id")';
 		$conn -> query($sql) or print(mysqli_error($conn));
 	}
 ?>
