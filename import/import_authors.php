@@ -14,7 +14,7 @@
 		// Connect to raw database 
 		$conn = connect($raw_db);
 		// Read authors
-		$sql = "SELECT * FROM author LIMIT $offset, $MAX_INT";
+		$sql = "SELECT * FROM author LIMIT $offset, $limit";
 		$result = $conn -> query($sql) or die(mysqli_error($conn));
 		// Import
 		$conn -> select_db($main_db);

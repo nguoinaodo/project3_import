@@ -13,7 +13,7 @@
 		// Database connection
 		$conn = connect($raw_db);
 		// Read author-paper
-		$sql = "SELECT * FROM author_paper LIMIT $offset, $MAX_INT";
+		$sql = "SELECT * FROM author_paper LIMIT $offset, $limit";
 		$result = $conn -> query($sql);
 		// Insert links
 		$conn -> select_db($main_db);
