@@ -1,4 +1,4 @@
 <?php 
-	$db_main = '';
-	$db_raw = '';
+	$main_db = '';
+	$raw_db = '';
 ?>
