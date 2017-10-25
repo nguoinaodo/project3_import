@@ -16,7 +16,7 @@
 		$sql = "SELECT * FROM `author_paper` LIMIT $offset, $MAX_INT";
 		$result = $conn -> query($sql);
 		// Insert links
-		$conn -> select_db($main_db)
+		$conn -> select_db($main_db);
 		while ($row_link = $result -> fetch_assoc()) {
 			$paper_id = $row_link['paperid'];
 			$author_id = $row_link['authorid'];
