@@ -142,7 +142,7 @@
 				if ($conn -> query($sql)) {
 					$city_id = $conn -> insert_id; 
 				} else {
-					printf("Error: %s\n", mysqli_error($conn));
+					printf("Insert city Error: %s\n", mysqli_error($conn));
 					$city_id = null;
 				}
 			}
