@@ -68,9 +68,9 @@
 	// Insert authors
 	function insert_authors($conn, $id, $surname, $given_name, $email, $url, $university_id) {
 			if (!$university_id) {
-				$sql = 'INSERT INTO authors (id, given_name, surname, email, url, university_id) VALUES ("$id", "$surname", "$given_name", "$email", "$url", NULL)';
+				$sql = "INSERT INTO authors (id, given_name, surname, email, url, university_id) VALUES ('$id', '$surname', '$given_name', '$email', '$url', NULL)";
 			} else {
-				$sql = 'INSERT INTO authors (id, given_name, surname, email, url, university_id) VALUES ("$id", "$surname", "$given_name", "$email", "$url", "$university_id")';
+				$sql = "INSERT INTO authors (id, given_name, surname, email, url, university_id) VALUES ('$id', '$surname', '$given_name', '$email', '$url', '$university_id')";
 			}
 			
 			if ($conn -> query($sql)) {
@@ -94,7 +94,7 @@
 				$country_id = $row['id'];
 			} else {
 				// Insert if not exists
-				$sql = 'INSERT INTO countries (name) VALUES ("$country")';
+				$sql = "INSERT INTO countries (name) VALUES ('$country')";
 				if ($conn -> query($sql)) {
 					$country_id = $conn -> insert_id;
 				} else {
@@ -138,7 +138,7 @@
 				$city_id = $row['id'];
 			} else {
 				// Insert if not exists
-				$sql = 'INSERT INTO cities (name, country_id) VALUES ("$city", $country_id)';
+				$sql = "INSERT INTO cities (name, country_id) VALUES ('$city', '$country_id')";
 				if ($conn -> query($sql)) {
 					$city_id = $conn -> insert_id; 
 				} else {
@@ -184,7 +184,7 @@
 				$university_id = $row['id'];
 			} else {
 				// Insert if not exists
-				$sql = 'INSERT INTO universities (name, city_id) VALUES ("$university", "$city_id")';
+				$sql = "INSERT INTO universities (name, city_id) VALUES ('$university', '$city_id')";
 				if ($conn -> query($sql)) {
 					$university_id = $conn -> insert_id;
 				} else {
@@ -233,7 +233,7 @@
 				$subject_id = $row['id'];
 			} else {
 				// Insert if not exists
-				$sql = 'INSERT INTO subjects (name) VALUES ("$subject")';
+				$sql = "INSERT INTO subjects (name) VALUES ('$subject')";
 				if ($conn -> query($sql)) {
 					$subject_id = $conn -> insert_id;
 				} else {
@@ -243,7 +243,7 @@
 			}
 			$r -> free();
 			// Insert author-subject
-			$sql = 'INSERT INTO author_subject (author_id, subject_id) VALUES ("$author_id", "$subject_id")';
+			$sql = "INSERT INTO author_subject (author_id, subject_id) VALUES ('$author_id', '$subject_id')";
 			$conn -> query($sql) or 
 				printf("Error: %s\n", mysqli_error($conn));
 		}
