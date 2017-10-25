@@ -13,8 +13,8 @@ with open('paper.sh', 'w') as f:
 		f.write('nohup php paper.php %d %d &\n' % (i * limit, limit))
 
 # Author-paper link: 128989
-paper = 100
+paper = 50
 with open('author_paper.sh', 'w') as f:
-	limit = 2000
+	limit = 4000
 	for i in range(paper):
 		f.write('nohup php author_paper.php %d %d &\n' % (i * limit, limit))

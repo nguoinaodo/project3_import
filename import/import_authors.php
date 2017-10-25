@@ -22,14 +22,9 @@
 			// Affiliation
 			$affiliation = preg_split('/,\s*/', $row_author['affiliation'], -1, PREG_SPLIT_NO_EMPTY);
 			$n = count($affiliation);
-			$university = $affiliation[0];
-			$country = $affiliation[$n - 1];
-			$city = $affiliation[$n - 2];
-			$abbreviation = [];
-			for ($i=1; $i < $n - 2; $i++) { 
-				array_push($abbreviation, $affiliation[$i]);
-			}
-			$abbreviation = join(', ', $abbreviation);
+			$university = array_key_exists(0, $affiliation) ? $affiliation[0] : $UNKNOWN;
+			$country = array_key_exists($n - 1, $affiliation) ? $affiliation[$n - 1] : $UNKNOWN;
+			$city = array_key_exists($n - 2, $affiliation) ? $affiliation[$n - 2] : $UNKNOWN;
 			// Country
 			$country_id = handle_country($conn, $country, $UNKNOWN);
 			if (!$country_id) {
@@ -86,7 +81,7 @@
 		}
 		$country = $conn -> real_escape_string($country);
 		// Check exists
-		$sql = 'SELECT * FROM countries WHERE name="$country"';
+		$sql = "SELECT * FROM countries WHERE name='$country'";
 		$r = $conn -> query($sql);
 		if ($r) {
 			$row = $r -> fetch_assoc();
@@ -105,7 +100,7 @@
 			return $country_id;
 		} else {
 			printf("Error: %s\n", mysqli_error($conn));
-			$r = $conn -> query('SELECT * FROM countries WHERE name="$UNKNOWN"');
+			$r = $conn -> query("SELECT * FROM countries WHERE name='$UNKNOWN'");
 			if ($r) {
 				$row = $r -> fetch_assoc();
 				$r -> free();
@@ -130,7 +125,7 @@
 		}
 		$city = $conn -> real_escape_string($city);
 		// Check exists
-		$sql = 'SELECT * FROM cities WHERE name="$city" AND country_id="$country_id"';
+		$sql = "SELECT * FROM cities WHERE name='$city' AND country_id='$country_id'";
 		$r = $conn -> query($sql);
 		if ($r) {
 			$row = $r -> fetch_assoc();
@@ -176,7 +171,7 @@
 		}
 		$university = $conn -> real_escape_string($university);
 		// Check exists
-		$sql = 'SELECT * FROM universities WHERE name="$university" AND city_id="$city_id"';
+		$sql = "SELECT * FROM universities WHERE name='$university' AND city_id='$city_id'";
 		$r = $conn -> query($sql);
 		if ($r) {
 			$row = $r -> fetch_assoc();
@@ -196,7 +191,7 @@
 			return $university_id;
 		} else {
 			printf("Error: %s\n", mysqli_error($conn));
-			$r = $conn -> query('SELECT * FROM universities WHERE name="$UNKNOWN"');
+			$r = $conn -> query("SELECT * FROM universities WHERE name='$UNKNOWN'");
 			if ($r) {
 				$row = $r -> fetch_assoc();
 				if (!$row) {
@@ -222,7 +217,7 @@
 			}
 			$subject = $conn -> real_escape_string($subject);
 			// Check subject exists
-			$sql = 'SELECT * FROM subjects WHERE name="$subject"';
+			$sql = "SELECT * FROM subjects WHERE name='$subject'";
 			$r = $conn -> query($sql);
 			if (!$r) {
 				printf("Error: %s\n", mysqli_error($conn));

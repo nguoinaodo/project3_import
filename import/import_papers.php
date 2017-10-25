@@ -50,7 +50,7 @@
 		foreach ($keywords as $key => $keyword) {
 			// Check exists
 			$keyword = $conn -> real_escape_string($keyword);
-			$sql = 'SELECT * FROM keywords WHERE content="$keyword"';
+			$sql = "SELECT * FROM keywords WHERE content='$keyword'";
 			$r = mysqli_query($conn, $sql);
 			if (!$r) {
 				printf("Error: %s\n", mysqli_error($conn));

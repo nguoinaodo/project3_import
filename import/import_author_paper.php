@@ -40,7 +40,7 @@
 <?php 
 	// Check paper exists
 	function check_paper_exists($conn, $paper_id) {
-		$sql = 'SELECT * FROM papers WHERE id="$paper_id"';
+		$sql = "SELECT * FROM papers WHERE id='$paper_id'";
 		$r = $conn -> query($sql);
 		if (!$r) {
 			printf("Error: %s\n", mysqli_error($conn));
@@ -53,7 +53,7 @@
 
 	// Check author exists
 	function check_author_exitst($conn, $author_id) {
-		$sql = 'SELECT * FROM authors WHERE id="$author_id"';
+		$sql = "SELECT * FROM authors WHERE id='$author_id'";
 		$r = $conn -> query($sql);
 		if (!$r) {
 			printf("Error: %s\n", mysqli_error($conn));
