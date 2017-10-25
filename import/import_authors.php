@@ -74,7 +74,7 @@
 			}
 			
 			if ($conn -> query($sql)) {
-				printf("Error %s\n", $conn -> sqlstate);
+				printf("Error %s\n", mysqli_error($conn));
 			};
 	}
 
