@@ -41,7 +41,11 @@
 	// Check paper exists
 	function check_paper_exists($conn, $paper_id) {
 		$sql = "SELECT * FROM papers WHERE id='$paper_id'";
-		$r = $conn -> query($sql) or return false;
+		$r = $conn -> query($sql);
+		if (!$r) {
+			printf("Error: %s\n", $conn -> sqlstate);
+			return false;
+		}
 		$row = $r -> fetch_assoc();
 		$r -> free();
 		return $row ? true : false;
@@ -50,7 +54,11 @@
 	// Check author exists
 	function check_author_exitst($conn, $author_id) {
 		$sql = "SELECT * FROM authors WHERE id='$author_id'";
-		$r = $conn -> query($sql) or return false;
+		$r = $conn -> query($sql);
+		if (!$r) {
+			printf("Error: %s\n", $conn -> sqlstate);
+			return false;
+		}
 		$row = $r -> fetch_assoc();
 		$r -> free();
 		return $row ? true : false;
