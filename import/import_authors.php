@@ -67,7 +67,12 @@
 <?php
 	// Insert authors
 	function insert_authors($conn, $id, $surname, $given_name, $email, $url, $university_id) {
-			$sql = 'INSERT INTO authors (id, given_name, surname, email, url, university_id) VALUES ("$id", "$surname", "$given_name", "$email", "$url", "$university_id")';
+			if (!$university_id) {
+				$sql = 'INSERT INTO authors (id, given_name, surname, email, url, university_id) VALUES ("$id", "$surname", "$given_name", "$email", "$url", NULL)';
+			} else {
+				$sql = 'INSERT INTO authors (id, given_name, surname, email, url, university_id) VALUES ("$id", "$surname", "$given_name", "$email", "$url", "$university_id")';
+			}
+			
 			if ($conn -> query($sql)) {
 				printf("Error %s\n", $conn -> sqlstate);
 			};
