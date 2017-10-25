@@ -42,7 +42,7 @@
 	function insert_papers($conn, $id, $title, $cover_date, $abstract, $url, $issn) {
 			$sql = "INSERT INTO papers (id, title, cover_date, abstract, url, issn) VALUES ('$id', '$title', '$cover_date', '$abstract', '$url', '$issn')";
 			$conn -> query($sql) or
-				printf("Error: %s\n", $conn -> sqlstate);
+				printf("Error: %s\n", mysqli_error($conn));
 	}
 
 	// Insert keywords, links 
@@ -52,7 +52,7 @@
 			$sql = 'SELECT * FROM keywords WHERE content="$keyword"';
 			$r = mysqli_query($conn, $sql);
 			if (!$r) {
-				printf("Error: %s\n", $conn -> sqlstate);
+				printf("Error: %s\n", mysqli_error($conn));
 				continue;
 			} 
 			$row = $r -> fetch_assoc();
@@ -63,9 +63,9 @@
 				// If not exists, insert
 				$sql = "INSERT INTO keywords (content) VALUES ('$keyword')";
 				if ($conn -> query($sql)) {
-					$keyword_id = $conn -> insert_id();
+					$keyword_id = $conn -> insert_id;
 				} else {
-					printf("Error: %s\n", $conn -> sqlstate);
+					printf("Error: %s\n", mysqli_error($conn));
 					continue;
 				}
 			}
@@ -74,7 +74,7 @@
 			// Insert links paper-keyword
 			$sql = "INSERT INTO keyword_paper (keyword_id, paper_id) VALUES ('$keyword_id', '$paper_id')";
 			$conn -> query($sql) or 
-				printf("Error: %s\n", $conn -> sqlstate);
+				printf("Error: %s\n", mysqli_error($conn));
 		}	
 	}
 ?>

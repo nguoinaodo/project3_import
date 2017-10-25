@@ -43,7 +43,7 @@
 		$sql = "SELECT * FROM papers WHERE id='$paper_id'";
 		$r = $conn -> query($sql);
 		if (!$r) {
-			printf("Error: %s\n", $conn -> sqlstate);
+			printf("Error: %s\n", mysqli_error($conn));
 			return false;
 		}
 		$row = $r -> fetch_assoc();
@@ -56,7 +56,7 @@
 		$sql = "SELECT * FROM authors WHERE id='$author_id'";
 		$r = $conn -> query($sql);
 		if (!$r) {
-			printf("Error: %s\n", $conn -> sqlstate);
+			printf("Error: %s\n", mysqli_error($conn));
 			return false;
 		}
 		$row = $r -> fetch_assoc();

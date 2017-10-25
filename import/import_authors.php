@@ -90,7 +90,7 @@
 				// Insert if not exists
 				$sql = "INSERT INTO countries (name) VALUES ('$country')";
 				if ($conn -> query($sql)) {
-					$country_id = $conn -> insert_id();
+					$country_id = $conn -> insert_id;
 				} else {
 					$country_id = null;
 				}
@@ -98,7 +98,7 @@
 			$r -> free();
 			return $country_id;
 		} else {
-			printf("Error: %s\n", $conn -> sqlstate);
+			printf("Error: %s\n", mysqli_error($conn));
 			$r = $conn -> query("SELECT * FROM countries WHERE name='$UNKNOWN'");
 			if ($r) {
 				$row = $r -> fetch_assoc();
@@ -109,7 +109,7 @@
 					$country_id = null;
 				}
 			} else {
-				printf("Error: %s\n", $conn -> sqlstate);
+				printf("Error: %s\n", mysqli_error($conn));
 				$country_id = null;
 			}
 			return $country_id;
@@ -133,16 +133,16 @@
 				// Insert if not exists
 				$sql = "INSERT INTO cities (name, country_id) VALUES ('$city', '$country_id')";
 				if ($conn -> query($sql)) {
-					$city_id = $conn -> insert_id(); 
+					$city_id = $conn -> insert_id; 
 				} else {
-					printf("Error: %s\n", $conn -> sqlstate);
+					printf("Error: %s\n", mysqli_error($conn));
 					$city_id = null;
 				}
 			}
 			$r -> free();
 			return $city_id;
 		} else {
-			printf("Error: %s\n", $conn -> sqlstate);
+			printf("Error: %s\n", mysqli_error($conn));
 			$r = $conn -> query("SELECT * FROM cities WHERE name='$UNKNOWN'");
 			if ($r) {
 				$row = $r -> fetch_assoc();
@@ -153,7 +153,7 @@
 				}
 				$r -> free();
 			} else {
-				printf("Error: %s\n", $conn -> sqlstate);
+				printf("Error: %s\n", mysqli_error($conn));
 				$city_id = null;
 			}
 			return $city_id;
@@ -177,16 +177,16 @@
 				// Insert if not exists
 				$sql = "INSERT INTO universities (name, city_id) VALUES ('$university', '$city_id')";
 				if ($conn -> query($sql)) {
-					$university_id = $conn -> insert_id();
+					$university_id = $conn -> insert_id;
 				} else {
-					printf("Error: %s\n", $conn -> sqlstate);
+					printf("Error: %s\n", mysqli_error($conn));
 					$university_id = null;
 				}
 			}
 			$r -> free();
 			return $university_id;
 		} else {
-			printf("Error: %s\n", $conn -> sqlstate);
+			printf("Error: %s\n", mysqli_error($conn));
 			$r = $conn -> query("SELECT * FROM universities WHERE name='$UNKNOWN'");
 			if ($r) {
 				$row = $r -> fetch_assoc();
@@ -197,7 +197,7 @@
 				}
 				$r -> free();
 			} else {
-				printf("Error: %s\n", $conn -> sqlstate);
+				printf("Error: %s\n", mysqli_error($conn));
 				$university_id = null;
 			}
 			return $university_id;
@@ -215,7 +215,7 @@
 			$sql = "SELECT * FROM subjects WHERE name='$subject'";
 			$r = $conn -> query($sql);
 			if (!$r) {
-				printf("Error: %s\n", $conn -> sqlstate);
+				printf("Error: %s\n", mysqli_error($conn));
 				continue;
 			}
 			$row = $r -> fetch_assoc();
@@ -225,9 +225,9 @@
 				// Insert if not exists
 				$sql = "INSERT INTO subjects (name) VALUES ('$subject')";
 				if ($conn -> query($sql)) {
-					$subject_id = $conn -> insert_id();
+					$subject_id = $conn -> insert_id;
 				} else {
-					printf("Error: %s\n", $conn -> sqlstate);
+					printf("Error: %s\n", mysqli_error($conn));
 					continue;
 				}
 			}
@@ -235,7 +235,7 @@
 			// Insert author-subject
 			$sql = "INSERT INTO author_subject (author_id, subject_id) VALUES ('$author_id', '$subject_id')";
 			$conn -> query($sql) or 
-				printf("Error: %s\n", $conn -> sqlstate);
+				printf("Error: %s\n", mysqli_error($conn));
 		}
 	}
 ?>
