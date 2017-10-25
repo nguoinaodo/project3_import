@@ -138,12 +138,12 @@
 				$city_id = $row['id'];
 			} else {
 				// Insert if not exists
-				$sql = 'INSERT INTO cities (name, country_id) VALUES ("$city", "$country_id")';
+				$sql = 'INSERT INTO cities (name, country_id) VALUES ("$city", $country_id)';
 				if ($conn -> query($sql)) {
 					$city_id = $conn -> insert_id; 
 				} else {
 					printf("Insert city Error: %s\n", mysqli_error($conn));
-					print($country_id);
+					print($country_id + "\n");
 					$city_id = null;
 				}
 			}
