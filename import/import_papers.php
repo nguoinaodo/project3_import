@@ -13,7 +13,7 @@
 		// Database connection
 		$conn = connect($raw_db);
 		// Read raw database
-		$sql = 'SELECT * FROM paper LIMIT $offset, $MAX_INT';
+		$sql = "SELECT * FROM paper LIMIT $offset, $MAX_INT";
 		$result = $conn -> query($sql) or die(mysqli_error($conn));
 		// Handle papers
 		$conn -> select_db($main_db);

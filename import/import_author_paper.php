@@ -13,13 +13,13 @@
 		// Database connection
 		$conn = connect($raw_db);
 		// Read author-paper
-		$sql = 'SELECT * FROM author_paper LIMIT $offset, $MAX_INT';
+		$sql = "SELECT * FROM author_paper LIMIT $offset, $MAX_INT";
 		$result = $conn -> query($sql);
 		// Insert links
 		$conn -> select_db($main_db);
 		while ($row_link = $result -> fetch_assoc()) {
 			$paper_id = $row_link['paperid'];
-			$author_id = $row_link['authorid'];
+			$author_id = $row_link[s3'authorid'];
 			// Check author exists
 			if (!check_paper_exists($conn, $paper_id)) {
 				continue;
