@@ -67,7 +67,7 @@
 <?php
 	// Insert authors
 	function insert_authors($conn, $id, $surname, $given_name, $email, $url, $university_id) {
-			$sql = "INSERT INTO authors (id, given_name, surname, email, url, university_id) VALUES ('$id', '$surname', '$given_name', '$email', '$url', '$university_id')";
+			$sql = 'INSERT INTO authors (id, given_name, surname, email, url, university_id) VALUES ("$id", "$surname", "$given_name", "$email", "$url", "$university_id")';
 			if ($conn -> query($sql)) {
 				printf("Error %s\n", $conn -> sqlstate);
 			};
@@ -125,7 +125,7 @@
 		}
 		$city = $conn -> real_escape_string($city);
 		// Check exists
-		$sql = "SELECT * FROM cities WHERE name='$city' AND country_id='$country_id'";
+		$sql = 'SELECT * FROM cities WHERE name="$city" AND country_id="$country_id"';
 		$r = $conn -> query($sql);
 		if ($r) {
 			$row = $r -> fetch_assoc();
@@ -133,7 +133,7 @@
 				$city_id = $row['id'];
 			} else {
 				// Insert if not exists
-				$sql = "INSERT INTO cities (name, country_id) VALUES ('$city', '$country_id')";
+				$sql = 'INSERT INTO cities (name, country_id) VALUES ("$city", "$country_id")';
 				if ($conn -> query($sql)) {
 					$city_id = $conn -> insert_id; 
 				} else {
@@ -170,7 +170,7 @@
 		}
 		$university = $conn -> real_escape_string($university);
 		// Check exists
-		$sql = 'SELECT * FROM universities WHERE name="$university" AND city_id=$city_id';
+		$sql = 'SELECT * FROM universities WHERE name="$university" AND city_id="$city_id"';
 		$r = $conn -> query($sql);
 		if ($r) {
 			$row = $r -> fetch_assoc();
@@ -178,7 +178,7 @@
 				$university_id = $row['id'];
 			} else {
 				// Insert if not exists
-				$sql = 'INSERT INTO universities (name, city_id) VALUES ("$university", $city_id)';
+				$sql = 'INSERT INTO universities (name, city_id) VALUES ("$university", "$city_id")';
 				if ($conn -> query($sql)) {
 					$university_id = $conn -> insert_id;
 				} else {
@@ -190,7 +190,7 @@
 			return $university_id;
 		} else {
 			printf("Error: %s\n", mysqli_error($conn));
-			$r = $conn -> query("SELECT * FROM universities WHERE name='$UNKNOWN'");
+			$r = $conn -> query('SELECT * FROM universities WHERE name="$UNKNOWN"');
 			if ($r) {
 				$row = $r -> fetch_assoc();
 				if (!$row) {
@@ -237,7 +237,7 @@
 			}
 			$r -> free();
 			// Insert author-subject
-			$sql = 'INSERT INTO author_subject (author_id, subject_id) VALUES ("$author_id", $subject_id)';
+			$sql = 'INSERT INTO author_subject (author_id, subject_id) VALUES ("$author_id", "$subject_id")';
 			$conn -> query($sql) or 
 				printf("Error: %s\n", mysqli_error($conn));
 		}
