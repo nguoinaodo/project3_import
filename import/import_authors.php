@@ -15,7 +15,7 @@
 		$conn = connect($raw_db);
 		// Read authors
 		$sql = "SELECT * FROM author LIMIT $offset, $MAX_INT";
-		$result = $conn -> query($sql) or die(mysqli_error());
+		$result = $conn -> query($sql) or die(mysqli_error($conn));
 		// Import
 		$conn -> select_db($main_db);
 		while ($row_author = $result -> fetch_assoc()) {

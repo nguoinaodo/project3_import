@@ -67,6 +67,6 @@
 	// Insert link
 	function insert_link($conn, $author_id, $paper_id) {
 		$sql = "INSERT INTO author_paper (author_id, paper_id) VALUES ('$author_id', '$paper_id')";
-		$conn -> query($sql) or print(mysqli_error());
+		$conn -> query($sql) or print(mysqli_error($conn));
 	}
 ?>
