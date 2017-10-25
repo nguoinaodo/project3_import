@@ -13,7 +13,7 @@
 		// Database connection
 		$conn = connect($raw_db);
 		// Read raw database
-		$sql = "SELECT * FROM paper LIMIT $offset, $MAX_INT";
+		$sql = "SELECT * FROM paper LIMIT $offset, $limit";
 		$result = $conn -> query($sql) or die(mysqli_error($conn));
 		// Handle papers
 		$conn -> select_db($main_db);
@@ -21,7 +21,7 @@
 			// Paper info
 			$id = $row_paper['id'];
 			$title = $row_paper['title'];
-			$cover_date = $row_paper['coverDate'];
+			$cover_date = $conn -> real_escape_string($row_paper['coverDate']);
 			$abstract = $conn -> real_escape_string($row_paper['abstract']);
 			$url = $conn -> real_escape_string($row_paper['url']);
 			$issn = $row_paper['issn'];
@@ -40,7 +40,7 @@
 <?php
 	// Insert papers
 	function insert_papers($conn, $id, $title, $cover_date, $abstract, $url, $issn) {
-			$sql = 'INSERT INTO papers (id, title, cover_date, abstract, url, issn) VALUES ("$id", "$title", "$cover_date", "$abstract", "$url", "$issn")';
+			$sql = "INSERT INTO papers (id, title, cover_date, abstract, url, issn) VALUES ('$id', '$title', '$cover_date', '$abstract', '$url', '$issn')";
 			$conn -> query($sql) or
 				printf("Error: %s\n", mysqli_error($conn));
 	}
@@ -49,6 +49,7 @@
 	function handle_keywords($conn, $paper_id, $keywords) {
 		foreach ($keywords as $key => $keyword) {
 			// Check exists
+			$keyword = $conn -> real_escape_string($keyword);
 			$sql = 'SELECT * FROM keywords WHERE content="$keyword"';
 			$r = mysqli_query($conn, $sql);
 			if (!$r) {
@@ -61,7 +62,7 @@
 				$keyword_id = $row['id'];
 			} else {
 				// If not exists, insert
-				$sql = 'INSERT INTO keywords (content) VALUES ("$keyword")';
+				$sql = "INSERT INTO keywords (content) VALUES ('$keyword')";
 				if ($conn -> query($sql)) {
 					$keyword_id = $conn -> insert_id;
 				} else {
@@ -72,7 +73,7 @@
 			// Free result
 			$r -> free(); 	
 			// Insert links paper-keyword
-			$sql = 'INSERT INTO keyword_paper (keyword_id, paper_id) VALUES ("$keyword_id", "$paper_id")';
+			$sql = "INSERT INTO keyword_paper (keyword_id, paper_id) VALUES ('$keyword_id', '$paper_id')";
 			$conn -> query($sql) or 
 				printf("Error: %s\n", mysqli_error($conn));
 		}	

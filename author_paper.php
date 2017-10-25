@@ -4,5 +4,7 @@
 	include 'import/import_author_paper.php';
 	include 'db.php';
 	// Import author-paper
-	import_author_paper($raw_db, 0, 0, $main_db);
+	$start = intval($argv[1])
+	$limit = intval($argv[2])
+	import_author_paper($raw_db, $start, $limit, $main_db);
 ?>
