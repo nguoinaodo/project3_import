@@ -20,7 +20,7 @@
 		while ($row_paper = $result -> fetch_assoc()) {
 			// Paper info
 			$id = $row_paper['id'];
-			$title = $row_paper['title'];
+			$title = $conn -> real_escape_string($row_paper['title']);
 			$cover_date = $conn -> real_escape_string($row_paper['coverDate']);
 			$abstract = $conn -> real_escape_string($row_paper['abstract']);
 			$url = $conn -> real_escape_string($row_paper['url']);
