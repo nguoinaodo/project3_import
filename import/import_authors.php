@@ -23,8 +23,16 @@
 			$affiliation = preg_split('/,\s*/', $row_author['affiliation'], -1, PREG_SPLIT_NO_EMPTY);
 			$n = count($affiliation);
 			$university = array_key_exists(0, $affiliation) ? $affiliation[0] : $UNKNOWN;
-			$country = array_key_exists($n - 1, $affiliation) ? $affiliation[$n - 1] : $UNKNOWN;
-			$city = array_key_exists($n - 2, $affiliation) ? $affiliation[$n - 2] : $UNKNOWN;
+			if (array_key_exists($n - 1, $affiliation) && $n - 1 > 0) {
+				$country = $affiliation[$n - 1];
+			} else {
+				$country = $UNKNOWN;
+			}
+			if (array_key_exists($n - 2, $affiliation) && $n - 2 > 0) {
+				$city = $affiliation[$n - 2];
+			} else {
+				$city = $UNKNOWN;
+			}
 			// Country
 			$country_id = handle_country($conn, $country, $UNKNOWN);
 			if (!$country_id) {
