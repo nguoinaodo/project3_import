@@ -20,7 +20,7 @@
 		$conn -> select_db($main_db);
 		while ($row_author = $result -> fetch_assoc()) {
 			// Affiliation
-			$affiliation = preg_split('/,\s*/', $row_author['affiliation'], -1, PREG_SPLIT_NO_EMPTY);
+			$affiliation = preg_split('/,\s*/', $row_author['affiliation']);
 			$n = count($affiliation);
 			$university = array_key_exists(0, $affiliation) ? $affiliation[0] : $UNKNOWN;
 			if (array_key_exists($n - 1, $affiliation) && $n - 1 > 0) {
