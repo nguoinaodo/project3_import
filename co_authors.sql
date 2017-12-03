@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 01, 2017 at 04:35 AM
+-- Generation Time: Dec 02, 2017 at 12:06 PM
 -- Server version: 10.1.28-MariaDB
 -- PHP Version: 7.1.10
 
@@ -19,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `co_authors`
+-- Database: `author`
 --
 
 -- --------------------------------------------------------
@@ -32,8 +32,8 @@ CREATE TABLE `authors` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `given_name` varchar(45) COLLATE utf8_unicode_ci NOT NULL,
   `surname` varchar(45) COLLATE utf8_unicode_ci NOT NULL,
-  `email` varchar(191) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `url` varchar(191) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `email` varchar(191) CHARACTER SET ascii DEFAULT NULL,
+  `url` varchar(191) CHARACTER SET ascii DEFAULT NULL,
   `university_id` int(10) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -66,12 +66,7 @@ CREATE TABLE `author_subject` (
 --
 
 CREATE TABLE `candidates` (
-  `id` int(10) UNSIGNED NOT NULL,
   `co_author_id` int(10) UNSIGNED NOT NULL,
-  `no_of_mutual_authors` smallint(5) UNSIGNED DEFAULT NULL,
-  `no_of_joint_papers` smallint(5) UNSIGNED DEFAULT NULL,
-  `no_of_joint_subjects` smallint(5) UNSIGNED DEFAULT NULL,
-  `no_of_joint_keywords` smallint(5) UNSIGNED DEFAULT NULL,
   `score_1` double(8,2) DEFAULT NULL,
   `score_2` double(8,2) DEFAULT NULL,
   `score_3` double(8,2) DEFAULT NULL
@@ -109,7 +104,11 @@ CREATE TABLE `countries` (
 CREATE TABLE `co_authors` (
   `id` int(10) UNSIGNED NOT NULL,
   `first_author_id` bigint(20) UNSIGNED NOT NULL,
-  `second_author_id` bigint(20) UNSIGNED NOT NULL
+  `second_author_id` bigint(20) UNSIGNED NOT NULL,
+  `no_of_mutual_authors` smallint(5) UNSIGNED DEFAULT NULL,
+  `no_of_joint_papers` smallint(5) UNSIGNED DEFAULT NULL,
+  `no_of_joint_subjects` smallint(5) UNSIGNED DEFAULT NULL,
+  `no_of_joint_keywords` smallint(5) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -162,23 +161,23 @@ CREATE TABLE `migrations` (
 --
 
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
-(18, '2014_10_12_000000_create_users_table', 1),
-(19, '2014_10_12_100000_create_password_resets_table', 1),
-(20, '2017_10_08_130503_change_author_table_to_authors', 1),
-(21, '2017_10_08_135327_change_paper_table_to_papers', 1),
-(22, '2017_10_08_143155_create_countries_table', 1),
-(23, '2017_10_08_143225_create_cities_table', 1),
-(24, '2017_10_08_144458_create_universities_table', 1),
-(25, '2017_10_08_144460_create_authors_table', 1),
-(26, '2017_10_08_144461_create_subjects_table', 1),
-(27, '2017_10_08_144462_create_author_subject_table', 1),
-(28, '2017_10_08_144470_create_papers_table', 1),
-(29, '2017_10_08_144480_create_author_paper_table', 1),
-(30, '2017_10_08_144529_create_keywords_table', 1),
-(31, '2017_10_08_144641_create_keyword_paper_table', 1),
-(32, '2017_10_08_145018_create_co_authors_table', 1),
-(33, '2017_10_08_145219_create_co_author_paper_table', 1),
-(34, '2017_10_08_154934_create_candidates_table', 1);
+(35, '2014_10_12_000000_create_users_table', 1),
+(36, '2014_10_12_100000_create_password_resets_table', 1),
+(37, '2017_10_08_130503_change_author_table_to_authors', 1),
+(38, '2017_10_08_135327_change_paper_table_to_papers', 1),
+(39, '2017_10_08_143155_create_countries_table', 1),
+(40, '2017_10_08_143225_create_cities_table', 1),
+(41, '2017_10_08_144458_create_universities_table', 1),
+(42, '2017_10_08_144460_create_authors_table', 1),
+(43, '2017_10_08_144461_create_subjects_table', 1),
+(44, '2017_10_08_144462_create_author_subject_table', 1),
+(45, '2017_10_08_144470_create_papers_table', 1),
+(46, '2017_10_08_144480_create_author_paper_table', 1),
+(47, '2017_10_08_144529_create_keywords_table', 1),
+(48, '2017_10_08_144641_create_keyword_paper_table', 1),
+(49, '2017_10_08_145018_create_co_authors_table', 1),
+(50, '2017_10_08_145219_create_co_author_paper_table', 1),
+(51, '2017_10_08_154934_create_candidates_table', 1);
 
 -- --------------------------------------------------------
 
@@ -187,13 +186,13 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 --
 
 CREATE TABLE `papers` (
-  `id` varchar(23) NOT NULL,
-  `title` mediumtext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `id` varchar(23) CHARACTER SET ascii NOT NULL,
+  `title` mediumtext COLLATE utf8_unicode_ci NOT NULL,
   `cover_date` datetime DEFAULT NULL,
-  `abstract` mediumtext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `url` varchar(191) DEFAULT NULL,
-  `issn` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=ascii;
+  `abstract` mediumtext COLLATE utf8_unicode_ci NOT NULL,
+  `url` varchar(191) CHARACTER SET ascii DEFAULT NULL,
+  `issn` varchar(50) CHARACTER SET ascii DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -249,14 +248,6 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Dumping data for table `users`
---
-
-INSERT INTO `users` (`id`, `name`, `email`, `password`, `gender`, `phone`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'Admin', 'admin@example.com', '$2y$10$pDVYD4OZgehg15Ab97ITce3fpR8eP29jWP5hYIxy5MeMTcPk30MuG', 'Male', NULL, 'NIZ0quQvXFWEgF8vqJl0DYBKRiRxqbYiJDqRlSqKO2sCHWwGNx6qNELnDWN1', '2017-11-01 03:31:47', '2017-11-01 03:31:47'),
-(2, 'Trang Ha Viet', 'tranghv@example.com', '$2y$10$Y1xWtHl4znamEfzjE30Vk.FLkFZCXSdbDLsCZhRl3kfaE2/tJpY0e', 'Male', NULL, 'PImsCzNm2gM5yzwFR8IiYSfSRwsE8fHr0oPVXVSxIie3ZhRCNy7IRixuJkZ8', '2017-11-01 03:31:47', '2017-11-01 03:31:47');
-
---
 -- Indexes for dumped tables
 --
 
@@ -285,8 +276,7 @@ ALTER TABLE `author_subject`
 -- Indexes for table `candidates`
 --
 ALTER TABLE `candidates`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `candidates_co_author_id_foreign` (`co_author_id`);
+  ADD PRIMARY KEY (`co_author_id`);
 
 --
 -- Indexes for table `cities`
@@ -307,7 +297,8 @@ ALTER TABLE `countries`
 ALTER TABLE `co_authors`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `co_authors_first_author_id_second_author_id_unique` (`first_author_id`,`second_author_id`),
-  ADD KEY `co_authors_first_author_id_second_author_id_index` (`first_author_id`,`second_author_id`);
+  ADD KEY `co_authors_first_author_id_index` (`first_author_id`),
+  ADD KEY `co_authors_second_author_id_index` (`second_author_id`);
 
 --
 -- Indexes for table `co_author_paper`
@@ -372,18 +363,6 @@ ALTER TABLE `users`
 --
 
 --
--- AUTO_INCREMENT for table `authors`
---
-ALTER TABLE `authors`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `candidates`
---
-ALTER TABLE `candidates`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `cities`
 --
 ALTER TABLE `cities`
@@ -411,7 +390,7 @@ ALTER TABLE `keywords`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 
 --
 -- AUTO_INCREMENT for table `subjects`
@@ -429,7 +408,7 @@ ALTER TABLE `universities`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
